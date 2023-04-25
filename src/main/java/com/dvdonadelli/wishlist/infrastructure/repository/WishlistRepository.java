@@ -1,4 +1,4 @@
-package com.dvdonadelli.wishlist.domain.repository;
+package com.dvdonadelli.wishlist.infrastructure.repository;
 
 import com.dvdonadelli.wishlist.domain.model.Wishlist;
 import org.springframework.data.repository.CrudRepository;

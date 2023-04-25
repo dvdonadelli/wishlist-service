@@ -2,7 +2,7 @@ package com.dvdonadelli.wishlist.infrastructure.service;
 
 import com.dvdonadelli.wishlist.domain.model.Wishlist;
 import com.dvdonadelli.wishlist.domain.model.WishlistItem;
-import com.dvdonadelli.wishlist.domain.repository.WishlistRepository;
+import com.dvdonadelli.wishlist.infrastructure.repository.WishlistRepository;
 import com.dvdonadelli.wishlist.domain.service.WishlistService;
 import org.springframework.stereotype.Service;
 
