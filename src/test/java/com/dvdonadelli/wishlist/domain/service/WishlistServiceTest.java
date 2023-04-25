@@ -72,4 +72,23 @@ class WishlistServiceTest {
         verify(repository).save(any(Wishlist.class));
     }
 
+    @Test
+    void testAddItemTo_NoDuplicates() {
+        // Given
+        String userId = "Davi";
+        String productId = "PRODUCT_1";
+        LocalDateTime now = LocalDateTime.now();
+
+        Wishlist existingList = new Wishlist(userId, List.of(new WishlistItem(productId, now)), now, now);
+        when(repository.findByUserId(userId)).thenReturn(Optional.of(existingList));
+
+        // When
+        Wishlist updatedWishlist = service.addItem(userId, productId);
+
+        // Then
+        assertNotNull(updatedWishlist);
+        assertEquals(existingList.getItems().size(), updatedWishlist.getItems().size());
+        verify(repository, never()).save(any(Wishlist.class));
+    }
+
 }
