@@ -19,12 +19,17 @@ public class WishlistServiceImpl implements WishlistService {
     }
 
     @Override
-    public Wishlist addItem(String productId, String userId) {
+    public Wishlist addItem(String userId, String productId) {
         Wishlist current = repository.findByUserId(userId).orElseGet(() -> createNewWishlist(userId));
 
         if (current.getItems().size() >= 20) {
             throw new IllegalStateException("Wishlist already contains 20 items");
         }
+
+        boolean alreadyExists = current.getItems().stream()
+                .anyMatch(item -> item.getProductId().equals(productId));
+
+        if (alreadyExists) return current;
 
         WishlistItem item = new WishlistItem(productId, LocalDateTime.now());
         current.getItems().add(item);
