@@ -1,12 +1,8 @@
 package com.dvdonadelli.wishlist.infrastructure.service;
 
 import com.dvdonadelli.wishlist.domain.model.Wishlist;
-import com.dvdonadelli.wishlist.domain.model.WishlistItem;
 import com.dvdonadelli.wishlist.domain.service.WishlistService;
 import com.dvdonadelli.wishlist.infrastructure.repository.WishlistRepository;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 public class WishlistServiceImpl implements WishlistService {
 
@@ -18,27 +14,13 @@ public class WishlistServiceImpl implements WishlistService {
 
     @Override
     public Wishlist addItem(String userId, String productId) {
-        Wishlist current = repository.findByUserId(userId).orElseGet(() -> createNewWishlist(userId));
+        Wishlist wishlist = repository.findByUserId(userId).orElseGet(() -> Wishlist.forUser(userId));
+        int initialSize = wishlist.getItems().size();
 
-        if (current.getItems().size() >= 20) {
-            throw new IllegalStateException("Wishlist already contains 20 items");
-        }
+        wishlist.addItem(productId);
 
-        boolean alreadyExists = current.getItems().stream()
-                .anyMatch(item -> item.getProductId().equals(productId));
+        if (initialSize != wishlist.getItems().size()) return repository.save(wishlist);
 
-        if (alreadyExists) return current;
-
-        WishlistItem item = new WishlistItem(productId, LocalDateTime.now());
-        current.getItems().add(item);
-        current.setDateModified(LocalDateTime.now());
-
-        return repository.save(current);
-    }
-
-    private Wishlist createNewWishlist(String userId) {
-        LocalDateTime now = LocalDateTime.now();
-
-        return new Wishlist(userId, new ArrayList<>(), now, now);
+        return wishlist;
     }
 }

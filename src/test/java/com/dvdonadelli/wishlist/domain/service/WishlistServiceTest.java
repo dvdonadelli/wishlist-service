@@ -77,9 +77,9 @@ class WishlistServiceTest {
         // Given
         String userId = "Davi";
         String productId = "PRODUCT_1";
-        LocalDateTime now = LocalDateTime.now();
 
-        Wishlist existingList = new Wishlist(userId, List.of(new WishlistItem(productId, now)), now, now);
+        Wishlist existingList = Wishlist.forUser(userId);
+        existingList.addItem(productId);
         when(repository.findByUserId(userId)).thenReturn(Optional.of(existingList));
 
         // When

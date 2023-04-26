@@ -1,16 +1,21 @@
 package com.dvdonadelli.wishlist.domain.model;
 
-import org.springframework.data.redis.core.RedisHash;
-
+import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
-@RedisHash
-public class Wishlist {
+
+public class Wishlist implements Serializable {
     private String id;
-    private final String userId;
-    private final List<WishlistItem> items;
-    private final LocalDateTime dateCreated;
+    private String userId;
+
+    public List<WishlistItem> getItems() {
+        return items;
+    }
+
+    private List<WishlistItem> items;
+    private LocalDateTime dateCreated;
     private LocalDateTime dateModified;
 
     public Wishlist(String userId, List<WishlistItem> items, LocalDateTime dateCreated, LocalDateTime dateModified) {
@@ -20,11 +25,26 @@ public class Wishlist {
         this.dateModified = dateModified;
     }
 
-    public List<WishlistItem> getItems() {
-        return items;
+    public void addItem(String productId) {
+        if (items.size() >= 20) {
+            throw new IllegalStateException("Wishlist already contains 20 items");
+        }
+        boolean alreadyExists = items.stream()
+                .anyMatch(item -> item.getProductId().equals(productId));
+
+        if (alreadyExists) return;
+
+        WishlistItem item = new WishlistItem(productId, LocalDateTime.now());
+        items.add(item);
+        setDateModified(LocalDateTime.now());
     }
 
-    public void setDateModified(LocalDateTime dateModified) {
+    public static Wishlist forUser(String userId) {
+        LocalDateTime now = LocalDateTime.now();
+        return new Wishlist(userId, new ArrayList<>(), now, now);
+    }
+
+    private void setDateModified(LocalDateTime dateModified) {
         this.dateModified = dateModified;
     }
 }
