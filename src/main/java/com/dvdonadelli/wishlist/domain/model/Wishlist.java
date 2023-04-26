@@ -1,8 +1,11 @@
 package com.dvdonadelli.wishlist.domain.model;
 
+import org.springframework.data.redis.core.RedisHash;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
+@RedisHash
 public class Wishlist {
     private String id;
     private final String userId;

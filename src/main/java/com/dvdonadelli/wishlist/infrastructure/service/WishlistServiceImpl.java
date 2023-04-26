@@ -2,14 +2,12 @@ package com.dvdonadelli.wishlist.infrastructure.service;
 
 import com.dvdonadelli.wishlist.domain.model.Wishlist;
 import com.dvdonadelli.wishlist.domain.model.WishlistItem;
-import com.dvdonadelli.wishlist.infrastructure.repository.WishlistRepository;
 import com.dvdonadelli.wishlist.domain.service.WishlistService;
-import org.springframework.stereotype.Service;
+import com.dvdonadelli.wishlist.infrastructure.repository.WishlistRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-@Service
 public class WishlistServiceImpl implements WishlistService {
 
     private final WishlistRepository repository;
