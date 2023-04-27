@@ -3,5 +3,21 @@ version: '3.8'
 services:
   mongodb:
     image: mongo
+    container_name: mongodb
+    restart: always
     ports:
-      - 27017:27017
+      - "27017:27017"
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    restart: always
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+      - ME_CONFIG_MONGODB_PORT=27017
+      - ME_CONFIG_BASICAUTH_USERNAME=wishlist
+      - ME_CONFIG_BASICAUTH_PASSWORD=wishlist
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mongodb
