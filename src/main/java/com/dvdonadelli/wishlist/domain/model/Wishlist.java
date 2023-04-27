@@ -1,19 +1,18 @@
 package com.dvdonadelli.wishlist.domain.model;
 
-import java.io.Serializable;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class Wishlist implements Serializable {
-    private String id;
+@Document(collection = "wishlists")
+public class Wishlist {
+
+    @Id
     private String userId;
-
-    public List<WishlistItem> getItems() {
-        return items;
-    }
-
     private List<WishlistItem> items;
     private LocalDateTime dateCreated;
     private LocalDateTime dateModified;
@@ -23,6 +22,10 @@ public class Wishlist implements Serializable {
         this.items = items;
         this.dateCreated = dateCreated;
         this.dateModified = dateModified;
+    }
+
+    public List<WishlistItem> getItems() {
+        return items;
     }
 
     public void addItem(String productId) {

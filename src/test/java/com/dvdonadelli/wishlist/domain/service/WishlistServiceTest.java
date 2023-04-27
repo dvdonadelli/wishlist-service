@@ -3,7 +3,6 @@ package com.dvdonadelli.wishlist.domain.service;
 import com.dvdonadelli.wishlist.domain.model.Wishlist;
 import com.dvdonadelli.wishlist.domain.model.WishlistItem;
 import com.dvdonadelli.wishlist.infrastructure.repository.WishlistRepository;
-import com.dvdonadelli.wishlist.infrastructure.service.WishlistServiceImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -26,7 +25,7 @@ class WishlistServiceTest {
     @BeforeAll
     static void setUp() {
         repository = mock(WishlistRepository.class);
-        service = new WishlistServiceImpl(repository);
+        service = new WishlistService(repository);
     }
 
     @Test

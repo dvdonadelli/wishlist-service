@@ -3,8 +3,6 @@ package com.dvdonadelli.wishlist.domain.model;
 import java.time.LocalDateTime;
 
 public class WishlistItem {
-
-    private String id;
     private final String productId;
     private final LocalDateTime dateAdded;
 
