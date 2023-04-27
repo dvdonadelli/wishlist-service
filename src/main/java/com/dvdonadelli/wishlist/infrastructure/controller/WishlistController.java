@@ -3,13 +3,11 @@ package com.dvdonadelli.wishlist.infrastructure.controller;
 import com.dvdonadelli.wishlist.domain.model.Wishlist;
 import com.dvdonadelli.wishlist.domain.service.WishlistService;
 import com.dvdonadelli.wishlist.infrastructure.controller.request.AddItemRequest;
+import com.dvdonadelli.wishlist.infrastructure.controller.response.WishlistItemResponse;
 import com.dvdonadelli.wishlist.infrastructure.controller.response.WishlistResponse;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/wishlist")
@@ -30,28 +28,21 @@ public class WishlistController {
 
     @DeleteMapping("/{userId}/items/{productId}")
     public ResponseEntity<?> removeItemFromWishlist(@PathVariable String userId,
-                                                    @PathVariable String productId) throws NotFoundException {
+                                                    @PathVariable String productId) {
         service.removeItemFromWishlist(userId, productId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{userId}/items/{productId}")
-    public ResponseEntity<Boolean> isProductInWishlist(@PathVariable String userId,
-                                                       @PathVariable String productId) throws NotFoundException {
-        boolean isProductInWishlist = service.isProductInWishlist(userId, productId);
-        return ResponseEntity.ok(isProductInWishlist);
+    public ResponseEntity<?> isProductInWishlist(@PathVariable String userId,
+                                                 @PathVariable String productId) {
+        WishlistItemResponse response = WishlistItemResponse.fromDomain(service.isProductInWishlist(userId, productId));
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{userId}")
     public ResponseEntity<?> getWishlist(@PathVariable String userId) {
-        Optional<Wishlist> wishlistOptional = service.getWishlist(userId);
-
-        if (wishlistOptional.isPresent()) {
-            Wishlist wishlist = wishlistOptional.get();
-            WishlistResponse response = WishlistResponse.fromDomain(wishlist);
-            return ResponseEntity.ok(response);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Wishlist not found for user: " + userId);
-        }
+        Wishlist wishlist = service.getWishlist(userId);
+        return ResponseEntity.ok(WishlistResponse.fromDomain(wishlist));
     }
 }

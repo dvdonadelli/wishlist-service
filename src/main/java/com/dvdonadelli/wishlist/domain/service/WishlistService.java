@@ -1,11 +1,11 @@
 package com.dvdonadelli.wishlist.domain.service;
 
+import com.dvdonadelli.wishlist.domain.exceptions.WishlistNotFoundException;
 import com.dvdonadelli.wishlist.domain.model.Wishlist;
+import com.dvdonadelli.wishlist.domain.model.WishlistItem;
 import com.dvdonadelli.wishlist.infrastructure.repository.WishlistRepository;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -28,25 +28,36 @@ public class WishlistService {
         return wishlist;
     }
 
-    public Optional<Wishlist> getWishlist(String userId) {
-        return repository.findByUserId(userId);
+    public Wishlist getWishlist(String userId) {
+        Optional<Wishlist> optional = repository.findByUserId(userId);
+
+        if (optional.isPresent()) {
+            return optional.get();
+        } else {
+            throw new WishlistNotFoundException("Wishlist not found for user: " + userId);
+        }
     }
 
-    public Boolean isProductInWishlist(String userId, String productId) throws NotFoundException {
-        Wishlist wishlist = repository.findByUserId(userId)
-                .orElseThrow(NotFoundException::new);
+    public WishlistItem isProductInWishlist(String userId, String productId) {
+        Optional<Wishlist> optionalWishlist = repository.findByUserId(userId);
 
-        return wishlist.getItems().stream()
-                .anyMatch(item -> item.getProductId().equals(productId));
+        if (optionalWishlist.isPresent()) {
+            Wishlist wishlist = optionalWishlist.get();
+            return wishlist.findItemByProductId(productId);
+        } else {
+            throw new WishlistNotFoundException("Wishlist not found for user: " + userId);
+        }
     }
 
-    public void removeItemFromWishlist(String userId, String productId) throws NotFoundException {
-        Wishlist wishlist = repository.findByUserId(userId)
-                .orElseThrow(NotFoundException::new);
+    public void removeItemFromWishlist(String userId, String productId) {
+        Optional<Wishlist> optional = repository.findByUserId(userId);
 
-        wishlist.getItems().removeIf(item -> item.getProductId().equals(productId));
-        wishlist.setDateModified(LocalDateTime.now());
-
-        repository.save(wishlist);
+        if (optional.isPresent()) {
+            Wishlist wishlist = optional.get();
+            wishlist.removeItemByProductId(productId);
+            repository.save(wishlist);
+        } else {
+            throw new WishlistNotFoundException("Wishlist not found for user: " + userId);
+        }
     }
 }
