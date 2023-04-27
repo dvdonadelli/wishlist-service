@@ -13,15 +13,19 @@ public class Wishlist {
 
     @Id
     private String userId;
+
     private List<WishlistItem> items;
     private LocalDateTime dateCreated;
     private LocalDateTime dateModified;
-
     public Wishlist(String userId, List<WishlistItem> items, LocalDateTime dateCreated, LocalDateTime dateModified) {
         this.userId = userId;
         this.items = items;
         this.dateCreated = dateCreated;
         this.dateModified = dateModified;
+    }
+
+    public String getUserId() {
+        return userId;
     }
 
     public List<WishlistItem> getItems() {
@@ -32,6 +36,7 @@ public class Wishlist {
         if (items.size() >= 20) {
             throw new IllegalStateException("Wishlist already contains 20 items");
         }
+
         boolean alreadyExists = items.stream()
                 .anyMatch(item -> item.getProductId().equals(productId));
 
@@ -47,7 +52,7 @@ public class Wishlist {
         return new Wishlist(userId, new ArrayList<>(), now, now);
     }
 
-    private void setDateModified(LocalDateTime dateModified) {
+    public void setDateModified(LocalDateTime dateModified) {
         this.dateModified = dateModified;
     }
 }
