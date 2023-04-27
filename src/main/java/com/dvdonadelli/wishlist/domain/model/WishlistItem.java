@@ -16,6 +16,10 @@ public class WishlistItem {
         return productId;
     }
 
+    public LocalDateTime getDateAdded() {
+        return dateAdded;
+    }
+
     public static WishlistItem of(String productId) {
         LocalDateTime now = LocalDateTime.now();
         return new WishlistItem(productId, now);

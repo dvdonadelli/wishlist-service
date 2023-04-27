@@ -29,6 +29,14 @@ public class Wishlist {
         return userId;
     }
 
+    public LocalDateTime getDateCreated() {
+        return dateCreated;
+    }
+
+    public LocalDateTime getDateModified() {
+        return dateModified;
+    }
+
     public List<WishlistItem> getItems() {
         return items;
     }
