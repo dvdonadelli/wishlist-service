@@ -28,7 +28,7 @@ docker compose up -d
 ```
 3. Build and run the application using Gradle:
 ```bash 
-./gralew bootRun
+./gradlew bootRun
 ```
 4. The application will start running on http://localhost:8080.
 
