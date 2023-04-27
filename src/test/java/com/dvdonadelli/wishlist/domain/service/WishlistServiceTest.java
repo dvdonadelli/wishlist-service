@@ -91,115 +91,104 @@ class WishlistServiceTest {
 
     @Test
     public void testRemoveItemFromWishlist_ItemExists_SuccessfullyRemoved() {
-        // Mock data
+        // Given
         String userId = "user123";
         String productId = "product123";
-        Wishlist wishlist = Wishlist.forUserWithProduct(userId, productId);
 
-        // Mock repository
+        Wishlist wishlist = Wishlist.forUserWithProduct(userId, productId);
         when(repository.findByUserId(userId)).thenReturn(Optional.of(wishlist));
 
-        // Call the service method
+        // When
         service.removeItemFromWishlist(userId, productId);
 
-        // Verify the repository method calls
+        // Then
         ArgumentCaptor<Wishlist> wishlistCaptor = ArgumentCaptor.forClass(Wishlist.class);
         verify(repository, times(1)).findByUserId(userId);
         verify(repository, times(1)).save(wishlistCaptor.capture());
 
-        // Assert the removed item
         Wishlist capturedWishlist = wishlistCaptor.getValue();
         Assertions.assertEquals(0, capturedWishlist.getItems().size());
     }
 
     @Test
     public void testRemoveItemFromWishlist_WishlistNotFound_ExceptionThrown() {
-        // Mock data
+        // Given
         String userId = "user123";
         String productId = "product123";
 
-        // Mock repository
         when(repository.findByUserId(userId)).thenReturn(Optional.empty());
 
-        // Call the service method and assert the exception
+        // When
         Assertions.assertThrows(WishlistNotFoundException.class,
                 () -> service.removeItemFromWishlist(userId, productId));
 
-        // Verify the repository method calls
+        // Then
         verify(repository, times(1)).findByUserId(userId);
         verify(repository, never()).save(any());
     }
 
     @Test
     public void testIsProductInWishlist_ItemExists_ReturnsWishlistItem() {
-        // Mock data
+        // Given
         String userId = "user123";
         String productId = "product123";
         WishlistItem wishlistItem = WishlistItem.of(productId);
         Wishlist wishlist = Wishlist.forUserWithProduct(userId, productId);
 
-        // Mock repository
         when(repository.findByUserId(userId)).thenReturn(Optional.of(wishlist));
 
-        // Call the service method
+        // When
         WishlistItem result = service.isProductInWishlist(userId, productId);
 
-        // Verify the repository method call
+        // Then
         verify(repository, times(1)).findByUserId(userId);
-
-        // Assert the result
         Assertions.assertEquals(wishlistItem, result);
     }
 
     @Test
     public void testIsProductInWishlist_WishlistNotFound_ExceptionThrown() {
-        // Mock data
+        // Given
         String userId = "user123";
         String productId = "product123";
 
-        // Mock repository
         when(repository.findByUserId(userId)).thenReturn(Optional.empty());
 
-        // Call the service method and assert the exception
+        // When
         Assertions.assertThrows(WishlistNotFoundException.class,
                 () -> service.isProductInWishlist(userId, productId));
 
-        // Verify the repository method call
+        // Then
         verify(repository, times(1)).findByUserId(userId);
     }
 
     @Test
     public void testGetWishlist_WishlistExists_ReturnsWishlist() {
-        // Mock data
+        // Given
         String userId = "user123";
         Wishlist wishlist = Wishlist.forUser(userId);
 
-        // Mock repository
         when(repository.findByUserId(userId)).thenReturn(Optional.of(wishlist));
 
-        // Call the service method
+        // When
         Wishlist result = service.getWishlist(userId);
 
-        // Verify the repository method call
+        // Then
         verify(repository, times(1)).findByUserId(userId);
-
-        // Assert the result
         Assertions.assertEquals(wishlist, result);
     }
 
     @Test
     public void testGetWishlist_WishlistNotFound_ExceptionThrown() {
-        // Mock data
+        // Given
         String userId = "user123";
 
-        // Mock repository
         when(repository.findByUserId(userId)).thenReturn(Optional.empty());
 
-        // Call the service method and assert the exception
+        // When
         Assertions.assertThrows(WishlistNotFoundException.class,
                 () -> service.getWishlist(userId));
 
-        // Verify the repository method call
+        // Then
         verify(repository, times(1)).findByUserId(userId);
     }
 }
