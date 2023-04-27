@@ -13,12 +13,12 @@ import java.util.List;
 public class Wishlist {
 
     @Id
-    private String userId;
-    private List<WishlistItem> items;
-    private LocalDateTime dateCreated;
+    private final String userId;
+    private final List<WishlistItem> items;
+    private final LocalDateTime dateCreated;
     private LocalDateTime dateModified;
 
-    public Wishlist(String userId, List<WishlistItem> items, LocalDateTime dateCreated, LocalDateTime dateModified) {
+    private Wishlist(String userId, List<WishlistItem> items, LocalDateTime dateCreated, LocalDateTime dateModified) {
         this.userId = userId;
         this.items = items;
         this.dateCreated = dateCreated;
@@ -43,7 +43,7 @@ public class Wishlist {
 
         if (alreadyExists) return;
 
-        WishlistItem item = new WishlistItem(productId, LocalDateTime.now());
+        WishlistItem item = WishlistItem.of(productId);
         items.add(item);
         setDateModified(LocalDateTime.now());
     }
@@ -63,6 +63,13 @@ public class Wishlist {
     public static Wishlist forUser(String userId) {
         LocalDateTime now = LocalDateTime.now();
         return new Wishlist(userId, new ArrayList<>(), now, now);
+    }
+
+    public static Wishlist forUserWithProduct(String userId, String productId) {
+        LocalDateTime now = LocalDateTime.now();
+        Wishlist wishlist = new Wishlist(userId, new ArrayList<>(), now, now);
+        wishlist.addItem(productId);
+        return wishlist;
     }
 
     public void setDateModified(LocalDateTime dateModified) {
