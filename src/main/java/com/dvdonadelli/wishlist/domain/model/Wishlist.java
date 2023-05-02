@@ -18,6 +18,7 @@ public class Wishlist {
     private final LocalDateTime dateCreated;
     private LocalDateTime dateModified;
 
+    // private constructor
     private Wishlist(String userId, List<WishlistItem> items, LocalDateTime dateCreated, LocalDateTime dateModified) {
         this.userId = userId;
         this.items = items;
@@ -68,6 +69,7 @@ public class Wishlist {
                 .orElseThrow(() -> new WishlistItemNotFoundException("There is no product " + productId + " in the wishlist"));
     }
 
+    // exposing factory methods to create Wishlists
     public static Wishlist forUser(String userId) {
         LocalDateTime now = LocalDateTime.now();
         return new Wishlist(userId, new ArrayList<>(), now, now);

@@ -7,6 +7,7 @@ public class WishlistItem {
     private final String productId;
     private final LocalDateTime dateAdded;
 
+    // private constructor
     private WishlistItem(String productId, LocalDateTime dateAdded) {
         this.productId = productId;
         this.dateAdded = dateAdded;
@@ -20,6 +21,7 @@ public class WishlistItem {
         return dateAdded;
     }
 
+    // exposing factory method
     public static WishlistItem of(String productId) {
         LocalDateTime now = LocalDateTime.now();
         return new WishlistItem(productId, now);
