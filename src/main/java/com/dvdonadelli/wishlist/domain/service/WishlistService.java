@@ -6,8 +6,6 @@ import com.dvdonadelli.wishlist.domain.model.WishlistItem;
 import com.dvdonadelli.wishlist.infrastructure.repository.WishlistRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class WishlistService {
 
@@ -18,8 +16,8 @@ public class WishlistService {
     }
 
     public Wishlist addItem(String userId, String productId) {
-        Wishlist wishlist = repository.findByUserId(userId).orElseGet(() -> Wishlist.forUser(userId));
-        int initialSize = wishlist.getItems().size();
+        final var wishlist = repository.findByUserId(userId).orElseGet(() -> Wishlist.forUser(userId));
+        final var initialSize = wishlist.getItems().size();
 
         wishlist.addItem(productId);
 
@@ -29,35 +27,22 @@ public class WishlistService {
     }
 
     public Wishlist getWishlist(String userId) {
-        Optional<Wishlist> optional = repository.findByUserId(userId);
-
-        if (optional.isPresent()) {
-            return optional.get();
-        } else {
-            throw new WishlistNotFoundException("Wishlist not found for user: " + userId);
-        }
+        return repository.findByUserId(userId)
+                .orElseThrow(() -> new WishlistNotFoundException("Wishlist not found for user: " + userId));
     }
 
     public WishlistItem isProductInWishlist(String userId, String productId) {
-        Optional<Wishlist> optionalWishlist = repository.findByUserId(userId);
+        final var wishlist = repository.findByUserId(userId)
+                .orElseThrow(() -> new WishlistNotFoundException("Wishlist not found for user: " + userId));
 
-        if (optionalWishlist.isPresent()) {
-            Wishlist wishlist = optionalWishlist.get();
-            return wishlist.findItemByProductId(productId);
-        } else {
-            throw new WishlistNotFoundException("Wishlist not found for user: " + userId);
-        }
+        return wishlist.findItemByProductId(productId);
     }
 
     public void removeItemFromWishlist(String userId, String productId) {
-        Optional<Wishlist> optional = repository.findByUserId(userId);
+        final var wishlist = repository.findByUserId(userId)
+                .orElseThrow(() -> new WishlistNotFoundException("Wishlist not found for user: " + userId));
 
-        if (optional.isPresent()) {
-            Wishlist wishlist = optional.get();
-            wishlist.removeItemByProductId(productId);
-            repository.save(wishlist);
-        } else {
-            throw new WishlistNotFoundException("Wishlist not found for user: " + userId);
-        }
+        wishlist.removeItemByProductId(productId);
+        repository.save(wishlist);
     }
 }
