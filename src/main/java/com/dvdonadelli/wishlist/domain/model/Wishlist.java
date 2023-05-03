@@ -66,7 +66,7 @@ public class Wishlist {
         return items.stream()
                 .filter(item -> item.getProductId().equals(productId))
                 .findFirst()
-                .orElseThrow(() -> new WishlistItemNotFoundException("There is no product " + productId + " in the wishlist"));
+                .orElseThrow(() -> new WishlistItemNotFoundException(productId));
     }
 
     // exposing factory methods to create Wishlists

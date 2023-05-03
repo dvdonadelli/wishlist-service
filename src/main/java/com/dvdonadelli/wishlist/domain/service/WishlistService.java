@@ -28,19 +28,19 @@ public class WishlistService {
 
     public Wishlist getWishlist(String userId) {
         return repository.findByUserId(userId)
-                .orElseThrow(() -> new WishlistNotFoundException("Wishlist not found for user: " + userId));
+                .orElseThrow(() -> new WishlistNotFoundException(userId));
     }
 
     public WishlistItem isProductInWishlist(String userId, String productId) {
         final var wishlist = repository.findByUserId(userId)
-                .orElseThrow(() -> new WishlistNotFoundException("Wishlist not found for user: " + userId));
+                .orElseThrow(() -> new WishlistNotFoundException(userId));
 
         return wishlist.findItemByProductId(productId);
     }
 
     public void removeItemFromWishlist(String userId, String productId) {
         final var wishlist = repository.findByUserId(userId)
-                .orElseThrow(() -> new WishlistNotFoundException("Wishlist not found for user: " + userId));
+                .orElseThrow(() -> new WishlistNotFoundException(userId));
 
         wishlist.removeItemByProductId(productId);
         repository.save(wishlist);
