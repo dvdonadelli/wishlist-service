@@ -3,7 +3,7 @@ package com.dvdonadelli.wishlist.domain.model;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class WishlistItem {
+public final class WishlistItem {
     private final String productId;
     private final LocalDateTime dateAdded;
 

@@ -6,11 +6,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
 @Document(collection = "wishlists")
-public class Wishlist {
+public final class Wishlist {
 
     @Id
     private final String userId;
@@ -39,7 +40,7 @@ public class Wishlist {
     }
 
     public List<WishlistItem> getItems() {
-        return items;
+        return Collections.unmodifiableList(items);
     }
 
     public void addItem(String productId) {
