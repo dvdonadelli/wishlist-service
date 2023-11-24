@@ -1,13 +1,13 @@
 package com.dvdonadelli.wishlist.infrastructure.controller;
 
-import com.dvdonadelli.wishlist.domain.model.Wishlist;
 import com.dvdonadelli.wishlist.domain.service.WishlistService;
 import com.dvdonadelli.wishlist.infrastructure.controller.request.AddItemRequest;
 import com.dvdonadelli.wishlist.infrastructure.controller.response.WishlistItemResponse;
 import com.dvdonadelli.wishlist.infrastructure.controller.response.WishlistResponse;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/wishlist")
@@ -20,29 +20,27 @@ public class WishlistController {
     }
 
     @PostMapping("/{userId}/items")
-    public ResponseEntity<Void> addItem(@PathVariable String userId,
-                                        @RequestBody AddItemRequest request) {
+    @ResponseStatus(CREATED)
+    public void addItem(@PathVariable String userId,
+                        @RequestBody AddItemRequest request) {
         service.addItem(userId, request.productId());
-        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping("/{userId}/items/{productId}")
-    public ResponseEntity<?> removeItemFromWishlist(@PathVariable String userId,
-                                                    @PathVariable String productId) {
+    @ResponseStatus(OK)
+    public void removeItemFromWishlist(@PathVariable String userId,
+                                       @PathVariable String productId) {
         service.removeItemFromWishlist(userId, productId);
-        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{userId}/items/{productId}")
-    public ResponseEntity<?> isProductInWishlist(@PathVariable String userId,
-                                                 @PathVariable String productId) {
-        WishlistItemResponse response = WishlistItemResponse.fromDomain(service.isProductInWishlist(userId, productId));
-        return ResponseEntity.ok(response);
+    public WishlistItemResponse isProductInWishlist(@PathVariable String userId,
+                                                    @PathVariable String productId) {
+        return WishlistItemResponse.fromDomain(service.isProductInWishlist(userId, productId));
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<?> getWishlist(@PathVariable String userId) {
-        Wishlist wishlist = service.getWishlist(userId);
-        return ResponseEntity.ok(WishlistResponse.fromDomain(wishlist));
+    public WishlistResponse getWishlist(@PathVariable String userId) {
+        return WishlistResponse.fromDomain(service.getWishlist(userId));
     }
 }
